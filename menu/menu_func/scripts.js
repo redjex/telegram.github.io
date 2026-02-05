@@ -97,8 +97,8 @@ function downloadCanvas(canvas, filename) {
 }
 
 processBtn.addEventListener('click', async () => {
-    if (processBtn.innerText.includes("Скачать")) {
-        downloadAll();
+    if (processBtn.innerText.includes("Скачать") || processBtn.innerText.includes("сохранено")) {
+        await downloadSequentially();
         return;
     }
 
@@ -111,20 +111,17 @@ processBtn.addEventListener('click', async () => {
     const [rows, cols] = selectedMode.split('x').map(Number);
     const totalSteps = rows * cols;
     
-    const totalWidth = cols * FINAL_WIDTH;
-    const totalImageHeight = rows * IMAGE_HEIGHT;
-
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = totalWidth;
-    tempCanvas.height = totalImageHeight;
-    tempCtx.drawImage(uploadedImage, 0, 0, totalWidth, totalImageHeight);
+    tempCanvas.width = cols * FINAL_WIDTH;
+    tempCanvas.height = rows * IMAGE_HEIGHT;
+    tempCtx.drawImage(uploadedImage, 0, 0, tempCanvas.width, tempCanvas.height);
 
     for (let i = 0; i < totalSteps; i++) {
         let progress = Math.round((i / totalSteps) * 100);
         processBtn.innerText = `Готово: ${progress}%`;
         
-        await delay(100);
+        await delay(100); 
 
         const row = Math.floor(i / cols);
         const col = i % cols;
@@ -136,12 +133,7 @@ processBtn.addEventListener('click', async () => {
 
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, FINAL_WIDTH, FINAL_HEIGHT);
-
-        ctx.drawImage(
-            tempCanvas,
-            col * FINAL_WIDTH, row * IMAGE_HEIGHT, FINAL_WIDTH, IMAGE_HEIGHT,
-            0, FRAME_HEIGHT, FINAL_WIDTH, IMAGE_HEIGHT
-        );
+        ctx.drawImage(tempCanvas, col * FINAL_WIDTH, row * IMAGE_HEIGHT, FINAL_WIDTH, IMAGE_HEIGHT, 0, FRAME_HEIGHT, FINAL_WIDTH, IMAGE_HEIGHT);
 
         ctx.fillStyle = '#000000';
         ctx.font = 'bold 48px "Special Gothic Expanded One", sans-serif';
@@ -155,8 +147,8 @@ processBtn.addEventListener('click', async () => {
     processBtn.innerText = "Скачать результат";
     processBtn.disabled = false;
     isProcessing = false;
-    const resetBtn = document.getElementById('resetBtn');
-    resetBtn.style.display = 'block';
+
+    document.getElementById('resetBtn').style.display = 'block';
 });
 
 resetBtn.addEventListener('click', () => {
@@ -221,3 +213,28 @@ document.getElementById('resetBtn').addEventListener('click', () => {
     document.getElementById('resetBtn').style.display = 'none';
     uploadArea.querySelector('.upload-text').innerText = "Нажмите или перетащите изображение сюда";
 });
+
+async function downloadSequentially() {
+    if (allCanvases.length === 0) return;
+
+    processBtn.disabled = true;
+    const originalText = processBtn.innerText;
+
+    for (let i = 0; i < allCanvases.length; i++) {
+        processBtn.innerText = `Сохранение: ${i + 1}/${allCanvases.length}`;
+        
+        const canvas = allCanvases[i];
+        const filename = `photo_${i + 1}.jpg`;
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/jpeg', 0.95);
+        link.click();
+
+        await delay(500); 
+    }
+
+    processBtn.innerText = "Все сохранено!";
+    await delay(1500);
+    processBtn.innerText = "Скачать результат";
+    processBtn.disabled = false;
+}
