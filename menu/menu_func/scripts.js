@@ -69,26 +69,31 @@ function loadImage(file) {
 }
 
 async function downloadAll() {
-    const zip = new JSZip();
-    const folder = zip.folder(`telegram_${selectedMode}`);
-    
+    if (allCanvases.length === 0) return;
+    processBtn.disabled = true;
+    const originalText = processBtn.innerText;
+
     for (let i = 0; i < allCanvases.length; i++) {
-        const canvas = allCanvases[i];
-        const blob = await new Promise(resolve => {
-            canvas.toBlob(resolve, 'image/jpeg', 0.95);
-        });
+        processBtn.innerText = `Сохранение: ${i + 1}/${allCanvases.length}`;
         
-        folder.file(`part_${i + 1}.jpg`, blob);
+        const canvas = allCanvases[i];
+        const filename = `photo_${i + 1}.jpg`;
+        
+        downloadCanvas(canvas, filename);
+        await delay(300); 
     }
-    
-    zip.generateAsync({ type: 'blob' }).then(function(content) {
-        const url = URL.createObjectURL(content);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `telegram_redjex_${selectedMode}_all.zip`;
-        a.click();
-        URL.revokeObjectURL(url);
-    });
+
+    processBtn.innerText = "Готово!";
+    await delay(1000);
+    processBtn.innerText = originalText;
+    processBtn.disabled = false;
+}
+
+function downloadCanvas(canvas, filename) {
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/jpeg', 0.95);
+    link.click();
 }
 
 processBtn.addEventListener('click', async () => {
@@ -147,7 +152,7 @@ processBtn.addEventListener('click', async () => {
         allCanvases.push(canvas);
     }
 
-    processBtn.innerText = "Скачать результат (.zip)";
+    processBtn.innerText = "Скачать результат";
     processBtn.disabled = false;
     isProcessing = false;
     const actionsContainer = document.querySelector('.actions-container');
