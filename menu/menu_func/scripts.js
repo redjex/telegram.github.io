@@ -155,8 +155,8 @@ processBtn.addEventListener('click', async () => {
     processBtn.innerText = "Скачать результат";
     processBtn.disabled = false;
     isProcessing = false;
-    const actionsContainer = document.querySelector('.actions-container');
-    actionsContainer.classList.add('finished');
+    const resetBtn = document.getElementById('resetBtn');
+    resetBtn.style.display = 'block';
 });
 
 resetBtn.addEventListener('click', () => {
@@ -210,4 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = '../index.html';
         });
     }
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+    fileInput.value = "";
+    uploadedImage = null;
+    allCanvases = [];
+    processBtn.innerText = "Обработать";
+    processBtn.disabled = true;
+    document.getElementById('resetBtn').style.display = 'none';
+    uploadArea.querySelector('.upload-text').innerText = "Нажмите или перетащите изображение сюда";
 });
