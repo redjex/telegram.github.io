@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="menu_func/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="container">
+
+        <div id="close" class="close">
+            <button class="exit">
+                <img src="../img/icon/Back.svg" alt="Back" class="icon_back">
+            </button>
+        </div>
+        <div id="filterBar" class="filter-bar">
+                <button class="mode-btn active" data-mode="1x3">1x3</button>
+                <button class="mode-btn" data-mode="2x3">2x3</button>
+                <button class="mode-btn" data-mode="3x3">3x3</button>
+            </div>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-text">
+                Нажмите или перетащите изображение сюда
+            </div>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+
+        <div class="actions-container">
+            <button class="process-btn" id="processBtn" disabled>Обработать</button>
+            <button class="reset-btn" id="resetBtn">Ещё</button>
+        </div>
+
+        <div id="canvasContainer"></div>
+
+        <div class="preview" id="preview" style="display: none;">
+            <h2>Результат:</h2>
+            <div class="preview-grid" id="previewGrid"></div>
+            <button class="download-all-btn" id="downloadAllBtn">Скачать все</button>
+        </div>
+    </div>
+
+    <script src="menu_func/scripts.js"></script>
+</body>
+</html>

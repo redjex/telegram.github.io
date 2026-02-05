@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-grey">
+    <div class="sticky-header">
+        <div class="container-inner">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Поиск по значкам...">
+                <img src="img/search.png" alt="Поиск" class="search-icon" id="searchIcon">
+            </div>
+            <div id="filterBar" class="filter-bar">
+                <button class="filter-button" data-filter="profile">Профиль</button>
+                <button class="filter-button" data-filter="stickers">Стикеры</button>
+                <button class="filter-button" data-filter="constructor">Конструктор</button>
+                <button class="filter-button" data-filter="all">Все</button>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="apps-list" id="appsList">
+        </div>
+    </div>
+    <div class="bottom-sheet" id="bottomSheet">
+        <div class="bottom-sheet-content">
+            <div class="sheet-header" id="sheetHeader"></div>
+        </div>
+    </div>
+    
+    <div class="floating-menu-trigger" id="menuTrigger">
+        <img src="img/icon/Moon.svg" class="img-menu-trigger" alt="Menu" style="width: 50px; height: 80px;" id="settingsIcon"> </div>
+
+    <div class="popup-menu" id="popupMenu">
+        <div class="color-palette">
+            <button class="color-palette-item white-color" data-color="white"></button>
+            <button class="color-palette-item grey-color active" data-color="grey"></button>
+            <button class="color-palette-item black-color" data-color="black"></button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script src="script.js"></script>
+</body>
+
+<script>
+    const DESKTOP_THRESHOLD = 900; 
+    const DESKTOP_FILE = 'index_desktop.html';
+
+    function checkAndRedirect() {
+        if (window.innerWidth >= DESKTOP_THRESHOLD) {
+            if (!window.location.pathname.endsWith(DESKTOP_FILE)) {
+                window.location.replace(DESKTOP_FILE);
+            }
+        }
+        else if (window.location.pathname.endsWith(DESKTOP_FILE)) {
+            window.location.replace('index.html');
+        }
+    }
+    checkAndRedirect(); 
+    window.addEventListener('resize', checkAndRedirect);
+</script>
+
+</html>
